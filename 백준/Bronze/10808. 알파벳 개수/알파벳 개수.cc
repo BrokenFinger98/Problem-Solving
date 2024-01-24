@@ -1,9 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
-int cnt[26];
+int a[26];
 int main(){
     string s;
     cin >> s;
-    for(char a : s) cnt[a-'a']++;
-    for(int i = 0; i < 26; ++i) cout << cnt[i] << " ";
+    for(auto it : s) ++a[it - 'a'];
+    for(auto it : a) cout << it << " ";
+    return 0;
 }
