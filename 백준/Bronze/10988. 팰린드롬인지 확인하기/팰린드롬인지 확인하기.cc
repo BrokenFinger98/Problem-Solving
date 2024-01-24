@@ -4,7 +4,7 @@ string s, tmp;
 int main(){
     cin >> s;
     tmp = s;
-    reverse(tmp.begin(), tmp.end());
-    if(tmp == s) cout << 1 << '\n';
-    else cout << 0 <<'\n';
+    reverse(s.begin(), s.end());
+    if(s.compare(tmp)) cout << 0;
+    else cout << 1;
 }
