@@ -1,22 +1,21 @@
 #include<bits/stdc++.h>
 using namespace std;
-int n, m, ret;
-string s, s1;
+int N, M, sum;
+string tmp, tmp1;
 map<string, int> mp;
 int main(){
-    cin >> n;
-    for(int i = 0; i < n; ++i){
-        cin >> m;
-        for(int j = 0; j < m; ++j){
-            cin >> s >> s1;
-            mp[s1]++;
+    cin >> N;
+    for(int i = 0; i < N; ++i){
+        cin >> M;
+        sum = 1;
+        for(int j = 0; j < M; ++j){
+            cin >> tmp >> tmp1;
+            mp[tmp1]++;
         }
-        ret = 1;
         for(auto it : mp){
-            ret *= it.second+1;
+            sum *= (it.second+1);
         }
-        ret--;
-        cout << ret << '\n';
+        cout << --sum << "\n";
         mp.clear();
     }
 }
