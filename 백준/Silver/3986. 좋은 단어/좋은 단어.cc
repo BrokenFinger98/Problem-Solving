@@ -1,19 +1,21 @@
 #include<bits/stdc++.h>
-using namespace std;
+using namespace std; 
 int N, cnt;
+stack<char> st[104];
 string s;
-stack<char> k[101];
 int main(){
+    ios_base::sync_with_stdio();
+    cin.tie(NULL); cout.tie(NULL);
     cin >> N;
     for(int i = 0; i < N; ++i){
         cin >> s;
-        for(int j = 0; j < s.length();++j){
-            if(k[i].empty() || k[i].top() != s[j])
-                k[i].push(s[j]);
+        for(int j = 0; j < s.length(); ++j){
+            if(st[i].size() && st[i].top() == s[j])
+                st[i].pop();
             else
-                k[i].pop();
+                st[i].push(s[j]);
         }
-        if(k[i].empty())
+        if(st[i].size() == 0)
             ++cnt;
     }
     cout << cnt;
