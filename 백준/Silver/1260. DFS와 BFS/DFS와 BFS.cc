@@ -4,16 +4,16 @@ int N, M, V, u, v;
 vector<int> adj[1004];
 int visited[1004];
 queue<int> q;
-void dfs(vector<int> *adj, int *visited, int u){
+void dfs(int u){
     visited[u] = 1;
     cout << u << " ";
     for(int it : adj[u]){
         if(visited[it]) continue;
-        dfs(adj, visited, it);
+        dfs(it);
     }
     return;
 }
-void bfs(vector<int> *adj, int *visited, int u){
+void bfs(int u){
     visited[u] = 1;
     q.push(u);
     while (q.size()){
@@ -29,8 +29,6 @@ void bfs(vector<int> *adj, int *visited, int u){
 }
 int main(){
     cin >> N >> M >> V;
-    vector<int> adj[N+2];
-    int visited[N+2];
     for(int i = 0; i < M; ++i){
         cin >> u >> v;
         adj[u].push_back(v);
@@ -40,9 +38,9 @@ int main(){
         sort(adj[i+1].begin(), adj[i+1].end());
     }
     memset(visited, 0, sizeof(visited));
-    dfs(adj, visited, V);
+    dfs(V);
     memset(visited, 0, sizeof(visited));
     cout << "\n";
-    bfs(adj, visited, V);
+    bfs(V);
     return 0;
 }
