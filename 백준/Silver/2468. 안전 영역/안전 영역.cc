@@ -1,43 +1,41 @@
 #include<bits/stdc++.h>
 using namespace std;
-const int maxN = 104;
-int maxE;
-int N;
-int ret[maxN];
-int adj[maxN][maxN];
-int visited[maxN][maxN];
+int n, y, x, h, max_h, cnt, ret;
 int dy[4] = {-1, 0, 1, 0};
 int dx[4] = {0, 1, 0, -1};
-void dfs(int h, int y, int x){
-    visited[y][x] = 1;
+int adj[100][100];
+int visited[100][100];
+void dfs(int y, int x, int h){
     for(int i = 0; i < 4; ++i){
         int ny = y + dy[i];
         int nx = x + dx[i];
-        if(ny < 0 || ny >= N || nx < 0 || nx >= N) continue;
-        if(adj[ny][nx] > h && visited[ny][nx] == 0)
-            dfs(h, ny, nx);
+        if(ny < 0 || ny >= n || nx < 0 || nx >= n) continue;
+        if(adj[ny][nx] > h && !visited[ny][nx]){
+            visited[ny][nx] = 1;
+            dfs(ny, nx, h);
+        } 
     }
-    return;
 }
 int main(){
-    cin >> N;
-    for(int i = 0; i<N; ++i){
-        for(int j = 0; j<N;++j){
+    cin >> n;
+    for(int i = 0; i < n; ++i){
+        for(int j = 0; j < n; ++j){
             cin >> adj[i][j];
-            maxE = max(maxE, adj[i][j]);
+            if(adj[i][j] > max_h) max_h = adj[i][j];
         }
     }
-    for(int i = 0; i < maxE ;++i){
+    for(int i = 0; i < max_h; ++i){
         memset(visited, 0, sizeof(visited));
-        for(int j = 0; j < N; ++j){
-            for(int k = 0; k < N; ++k){
-                if(adj[j][k] > i && visited[j][k] == 0){
-                    ret[i]++;
-                    dfs(i, j, k);
+        cnt = 0;
+        for(int j = 0; j < n; ++j){
+            for(int k = 0; k < n; ++k){
+                if(adj[j][k] > i && !visited[j][k]){
+                    ++cnt;
+                    dfs(j, k, i);
                 }
             }
         }
+        ret = max(cnt, ret);
     }
-    cout << *max_element(ret, ret + maxN) << "\n";
-    return 0;
+    cout << ret << "\n";
 }
