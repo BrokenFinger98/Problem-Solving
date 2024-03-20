@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-int n, temp, r, root;
+int n, temp, root, r;
 vector<int> adj[50];
 int dfs(int u){
     int ret = 0;
@@ -8,14 +8,12 @@ int dfs(int u){
     for(int v : adj[u]){
         if(v == r) continue;
         ret += dfs(v);
-        child++;
+        ++child;
     }
     if(child == 0) return 1;
     return ret;
 }
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(NULL);
     cin >> n;
     for(int i = 0; i < n; ++i){
         cin >> temp;
@@ -28,4 +26,5 @@ int main(){
         return 0;
     }
     cout << dfs(root) << "\n";
+    return 0;
 }
