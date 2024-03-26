@@ -1,13 +1,13 @@
 #include<bits/stdc++.h>
 using namespace std;
-int n, dp[64][64][64], a[3], visited[64][64][64];
-int _a[6][3] = {
-    {9, 3, 1}, 
-	{9, 1, 3}, 
-	{3, 1, 9}, 
-	{3, 9, 1}, 
-	{1, 3, 9}, 
-	{1, 9, 3}
+int n, a[3], visited[60][60][60];
+int _a[6][3]{
+    {9, 3, 1},
+    {9, 1, 3},
+    {3, 9, 1},
+    {3, 1, 9},
+    {1, 9, 3},
+    {1, 3, 9}
 };
 struct A{
     int a, b, c;
@@ -21,7 +21,6 @@ int solve(int a, int b, int c){
         int b = q.front().b;
         int c = q.front().c;
         q.pop();
-        if(visited[0][0][0]) break;
         for(int i = 0; i < 6; ++i){
             int na = max(0, a - _a[i][0]);
             int nb = max(0, b - _a[i][1]);
@@ -34,7 +33,7 @@ int solve(int a, int b, int c){
     return visited[0][0][0] - 1;
 }
 int main(){
-    ios_base::sync_with_stdio(0);
+    ios_base::sync_with_stdio(false);
     cin.tie(NULL); cout.tie(NULL);
     cin >> n;
     for(int i = 0; i < n; ++i) cin >> a[i];
