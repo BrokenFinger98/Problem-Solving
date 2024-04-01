@@ -1,41 +1,34 @@
 #include<bits/stdc++.h>
 using namespace std;
-int n, k, ret, now;
-int visited[200000];
-int prev_[200000];
+#define prev aaaa
+const int maxS = 200000;
+int n, k, now;
+int visited[maxS];
+int prev[maxS];
 queue<int> q;
 vector<int> v;
-void bfs(){
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(NULL); cout.tie(NULL);
+    cin >> n >> k;
     visited[n] = 1;
     q.push(n);
     while (q.size()){
-        now = q.front();
-        q.pop();
-        if(now == k){
-            ret = visited[k];
-            break;
-        }
-        for(int next : {now-1, now+1, now*2}){
-            if(next < 0 || next >= 200000 || visited[next]) continue;
+        now  = q.front(); q.pop();
+        for(int next : {now+1, now-1, now*2}){
+            if(next < 0 || next >= maxS || visited[next]) continue;
             visited[next] = visited[now] + 1;
-            prev_[next] = now;
+            prev[next] = now;
             q.push(next);
         }
     }
-}
-int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
-    cin >> n >> k;
-
-    bfs();
-    for(int i = k; i != n; i = prev_[i])
+    
+    for(int i = k; i != n; i = prev[i])
         v.push_back(i);
     v.push_back(n);
     reverse(v.begin(), v.end());
 
-    cout << ret-1 << "\n";
-    for(int b : v)
-        cout << b << " ";
+    cout << visited[k]-1 << "\n";
+    for(int a : v) cout << a << " ";
     return 0;
 }
