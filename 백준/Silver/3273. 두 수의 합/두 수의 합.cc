@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-int n, x, i, j = 1, ret, flag;
+int n, x, ret;
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(NULL); cout.tie(NULL);
@@ -10,19 +10,13 @@ int main(){
     cin >> x;
     sort(v.begin(), v.end());
 
-    int k = n;
-    for(int i = 0; i < n; ++i){
-        for(int j = i+1; j < k; ++j){
-            if(v[i] + v[j] == x){
-                k = j;
-                ++ret;
-                break;
-            }
-        }
-        if(j == k){
-            break;
-        }
+    int r = n-1, l = 0;
+    while (l < r){
+        if(v[l] + v[r] == x) r--, ret++;
+        else if(v[l] + v[r] > x) --r;
+        else if(v[l] + v[r] < x) ++l;
     }
+    
     cout << ret << "\n";
     return 0;
 }
