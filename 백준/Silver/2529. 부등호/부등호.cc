@@ -1,49 +1,35 @@
 #include <bits/stdc++.h>
 using namespace std;
-int k;
-char c;
-vector<char> oper;
-vector<int> num = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-string trans(){
-    string ret = "";
-    for(int i = 0; i < k+1; ++i){
-        ret += '0' + num[i];
-    }
-    return ret;
+int k, check[10];
+char a[9];
+vector<string> ret;
+bool good(char x, char y, char op){
+    if(x < y && op == '<') return true;
+    if(x > y && op == '>') return true;
+    return false;
 }
-int check(){
-    for(int i = 0; i < k; ++i){
-        if(oper[i] == '<'){
-            if(num[i] < num[i+1]) continue;
-            else return 0;
-        }else{
-            if(num[i] > num[i+1]) continue;
-            else return 0;
+void go(int idx, string num){
+    if(idx == k+1){ 
+        ret.push_back(num);
+        return;
+    }
+    for(int i = 0; i <= 9; ++i){
+        if(check[i]) continue;
+        if(idx == 0 || good(num[idx - 1], i + '0', a[idx - 1])){
+            check[i] = 1;
+            go(idx + 1, num + to_string(i));
+            check[i] = 0;
         }
     }
-    return 1;
+    return;
 }
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(NULL); cout.tie(NULL);
-    string max_s = "", min_s = "";
     cin >> k;
-    for(int i = 0; i < k; ++i){
-        cin >> c;
-        oper.push_back(c);
-    }
-    for(int i = 0; i < k; ++i){
-        max_s += '0';
-        min_s += '9';
-    }
-    do{
-        if(check()){
-            string ret = trans();
-            if(ret > max_s) max_s = ret;
-            if(ret < min_s) min_s = ret;
-        }
-    } while (next_permutation(num.begin(), num.end()));
-    cout << max_s << "\n";
-    cout << min_s << "\n";
+    for(int i = 0; i < k; ++i) cin >> a[i];
+    go(0, "");
+    sort(ret.begin(), ret.end());
+    cout << ret[ret.size() - 1] << "\n" << ret[0] << "\n";
     return 0;
 }
