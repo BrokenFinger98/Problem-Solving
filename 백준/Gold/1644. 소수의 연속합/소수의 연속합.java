@@ -9,7 +9,7 @@ public class Main {
     static boolean[] checkPrime;
 
     // 소수를 저장하는 배열
-    static int[] prime = new int[400004];
+    static List<Integer> prime = new ArrayList<>();
     static int L, R;
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,31 +32,29 @@ public class Main {
             }
         }
 
-        int k = 1;
         for(int i = 2; i <= N; ++i){
-            if(!checkPrime[i]){
-                prime[k] = prime[k-1] + i;
-                ++k;
+            if(!checkPrime[i])
+                prime.add(i);
+        }
+
+        int sum = 0;
+        int result = 0;
+        int L = 0, R = 0;
+        while (true){
+            if(sum >= N){
+                sum -= prime.get(L);
+                ++L;
+            }else if(R == prime.size()){
+                break;
+            }else{
+                sum += prime.get(R);
+                ++R;
+            }
+            if(sum == N){
+                result++;
             }
         }
 
-        L = 0;
-        R = 1;
-        int sum = 0;
-        int result = 0;
-        while (true){
-            if(R <= L || R >= k){
-                break;
-            }
-            sum = prime[R] - prime[L];
-            if(sum < N) ++R;
-            else if(sum > N) ++L;
-            else{
-                result++;
-                ++R;
-                ++L;
-            }
-        }
         bw.write(Integer.toString(result) + "\n");
         bw.flush();
         bw.close();
