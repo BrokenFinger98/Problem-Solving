@@ -13,7 +13,7 @@ public class Main {
     static int L, R;
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         N = Integer.parseInt(st.nextToken());
@@ -55,9 +55,8 @@ public class Main {
             }
         }
 
-        bw.write(Integer.toString(result) + "\n");
-        bw.flush();
-        bw.close();
+        sb.append(result);
+        System.out.println(sb.toString());
         br.close();
     }
 }
