@@ -25,5 +25,6 @@ public class Main {
                 pq.offer(e);
             }
         }
+        br.close();
     }
 }
