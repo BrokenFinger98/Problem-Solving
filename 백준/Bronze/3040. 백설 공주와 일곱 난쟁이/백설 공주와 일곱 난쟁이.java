@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Main {
     static int[] input = new int[9];
-    static int[] output = new int[2];
+    static int[] index = new int[2];
     static boolean[] result = new boolean[9];
     static int sum;
     public static void main(String[] args) throws IOException {
@@ -15,14 +15,8 @@ public class Main {
             sum += input[i];
         }
         sum -= 100;
-        for(int i = 0; i < 9; ++i){
-            for(int j = i + 1; j < 9; ++j){
-                if(sum == input[i] + input[j]){
-                    result[i] = true;
-                    result[j] = true;
-                }
-            }
-        }
+
+        combi(0, 0);
 
         for(int i = 0; i < 9; ++i){
             if(result[i]) continue;
@@ -30,15 +24,17 @@ public class Main {
         }
 
     }
-//    static void combi(int depth, int start){
-//        if(depth == 2){
-//            int sum = 0;
-//            for(int i = 0; i < depth; ++i){
-//                sum -= output[i];
-//            }
-//            if(sum == 0){
-//
-//            }
-//        }
-//    }
+    static void combi(int depth, int start){
+        if(depth == 2){
+            if(sum == input[index[0]] + input[index[1]]){
+                result[index[0]] = true;
+                result[index[1]] = true;
+            }
+            return;
+        }
+        for(int i = start; i < 9; ++i){
+            index[depth] = i;
+            combi(depth+1, i+1);
+        }
+    }
 }
