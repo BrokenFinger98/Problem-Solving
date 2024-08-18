@@ -21,7 +21,6 @@ public class Solution {
             result = 0;
             maxHeight = 0;
             N = Integer.parseInt(br.readLine());
-            trees = new int[N];
 
             st = new StringTokenizer(br.readLine());
             for(int i = 0; i < N; ++i){
