@@ -2,6 +2,9 @@ import java.io.*;
 import java.util.*;
 import java.lang.*;
 
+/**
+ *  시간 : 110ms, 메모리 : 18424KB
+ */
 public class Solution {
     static int T, N, result, maxHeight, height;
     static int[] trees = new int[104];
@@ -15,10 +18,10 @@ public class Solution {
         T = Integer.parseInt(st.nextToken());
         for(int t = 1; t <= T; ++t){
             sb = new StringBuilder();
-            trees = new int[104];
             result = 0;
             maxHeight = 0;
             N = Integer.parseInt(br.readLine());
+            trees = new int[N];
 
             st = new StringTokenizer(br.readLine());
             for(int i = 0; i < N; ++i){
