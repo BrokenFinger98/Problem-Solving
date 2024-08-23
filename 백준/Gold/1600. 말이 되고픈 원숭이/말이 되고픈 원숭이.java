@@ -5,7 +5,10 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
-class Monkey{
+/**
+ *  시간 : 500ms , 메모리 : 58,120KB
+ */
+class Monkey {
     int y;
     int x;
     int useJumpCnt;
@@ -16,6 +19,7 @@ class Monkey{
         this.useJumpCnt = useJumpCnt;
     }
 }
+
 public class Main {
     static int H, W, K, min = Integer.MAX_VALUE;
     static int[] dy = {1, 0, -1, 0};
@@ -24,6 +28,7 @@ public class Main {
     static int[] jumpX = {2, 1, -1, -2, -2, -1, 1, 2};
     static boolean[][] map = new boolean[204][204];
     static int[][][] visited = new int[204][204][34];
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -42,7 +47,7 @@ public class Main {
         br.close();
     }
 
-    static void bfs(){
+    static void bfs() {
         Queue<Monkey> queue = new ArrayDeque<>();
         queue.offer(new Monkey(0, 0, 0));
         while (!queue.isEmpty()) {
@@ -50,35 +55,36 @@ public class Main {
             int y = now.y;
             int x = now.x;
             int useJumpCnt = now.useJumpCnt;
-            if(y == H-1 && x == W-1){
+            if (y == H - 1 && x == W - 1) {
                 min = Math.min(min, visited[y][x][useJumpCnt]);
-                continue;
+                break;
             }
             // 점프 하는 경우
-            if(useJumpCnt < K){
+            if (useJumpCnt < K) {
                 for (int i = 0; i < 8; i++) {
                     int ny = y + jumpY[i];
                     int nx = x + jumpX[i];
-                    if(!checkRange(ny, nx)) continue;
-                    if(map[ny][nx] && visited[ny][nx][useJumpCnt + 1] == 0 ){
+                    if (!checkRange(ny, nx)) continue;
+                    if (map[ny][nx] && visited[ny][nx][useJumpCnt + 1] == 0) {
                         visited[ny][nx][useJumpCnt + 1] = visited[y][x][useJumpCnt] + 1;
-                        queue.offer(new Monkey(ny, nx, useJumpCnt+1));
+                        queue.offer(new Monkey(ny, nx, useJumpCnt + 1));
                     }
                 }
             }
             // 그냥 가는 경우
-            for(int i = 0; i < 4; ++i){
+            for (int i = 0; i < 4; ++i) {
                 int ny = y + dy[i];
                 int nx = x + dx[i];
-                if(!checkRange(ny, nx)) continue;
-                if(map[ny][nx] && visited[ny][nx][useJumpCnt] == 0 ){
+                if (!checkRange(ny, nx)) continue;
+                if (map[ny][nx] && visited[ny][nx][useJumpCnt] == 0) {
                     visited[ny][nx][useJumpCnt] = visited[y][x][useJumpCnt] + 1;
                     queue.offer(new Monkey(ny, nx, useJumpCnt));
                 }
             }
         }
     }
-    static boolean checkRange(int ny, int nx){
+
+    static boolean checkRange(int ny, int nx) {
         if (ny < 0 || ny >= H || nx < 0 || nx >= W) return false;
         return true;
     }
