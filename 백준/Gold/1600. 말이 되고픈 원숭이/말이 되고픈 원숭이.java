@@ -60,7 +60,7 @@ public class Main {
                     int ny = y + jumpY[i];
                     int nx = x + jumpX[i];
                     if(!checkRange(ny, nx)) continue;
-                    if(map[ny][nx] && (visited[ny][nx][useJumpCnt + 1] == 0 || visited[y][x][useJumpCnt] + 1 < visited[ny][nx][useJumpCnt + 1])){
+                    if(map[ny][nx] && visited[ny][nx][useJumpCnt + 1] == 0 ){
                         visited[ny][nx][useJumpCnt + 1] = visited[y][x][useJumpCnt] + 1;
                         queue.offer(new Monkey(ny, nx, useJumpCnt+1));
                     }
@@ -71,7 +71,7 @@ public class Main {
                 int ny = y + dy[i];
                 int nx = x + dx[i];
                 if(!checkRange(ny, nx)) continue;
-                if(map[ny][nx] && (visited[ny][nx][useJumpCnt] == 0 || visited[y][x][useJumpCnt] + 1 < visited[ny][nx][useJumpCnt])){
+                if(map[ny][nx] && visited[ny][nx][useJumpCnt] == 0 ){
                     visited[ny][nx][useJumpCnt] = visited[y][x][useJumpCnt] + 1;
                     queue.offer(new Monkey(ny, nx, useJumpCnt));
                 }
