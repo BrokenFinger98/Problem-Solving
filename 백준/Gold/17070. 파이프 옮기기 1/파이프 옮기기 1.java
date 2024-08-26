@@ -7,15 +7,6 @@ import java.util.StringTokenizer;
  *  시간 : 448ms, 메모리 : 172,096KB
  */
 public class Main {
-    static class Pipe{
-        int y;
-        int x;
-
-        public Pipe(int y, int x) {
-            this.y = y;
-            this.x = x;
-        }
-    }
     static int result, N;
     static boolean[][] map;
     static boolean[][] visited;
