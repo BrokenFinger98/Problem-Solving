@@ -3,18 +3,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
-class Pipe{
-    int y;
-    int x;
-    int shape;
-
-    public Pipe(int y, int x, int shape) {
-        this.y = y;
-        this.x = x;
-        this.shape = shape;
-    }
-}
+/**
+ *  시간 : 448ms, 메모리 : 172,096KB
+ */
 public class Main {
+    static class Pipe{
+        int y;
+        int x;
+
+        public Pipe(int y, int x) {
+            this.y = y;
+            this.x = x;
+        }
+    }
     static int result, N;
     static boolean[][] map;
     static boolean[][] visited;
@@ -35,14 +36,11 @@ public class Main {
 
         visited[0][0] = true;
         visited[0][1] = true;
-        dfs(new Pipe(0, 1, 2));
+        dfs(0, 1, 2);
         System.out.println(result);
         br.close();
     }
-    static void dfs(Pipe now){
-        int y = now.y;
-        int x = now.x;
-        int shape = now.shape;
+    static void dfs(int y, int x, int shape){
         if(y == N-1 && x == N-1){
             result++;
             return;
@@ -59,7 +57,7 @@ public class Main {
             if(i == 0 && (!map[ny-1][nx] || !map[ny][nx-1])) continue;
             if(map[ny][nx]){
                 visited[ny][nx] = true;
-                dfs(new Pipe(ny, nx, i));
+                dfs(ny, nx, i);
                 visited[ny][nx] = false;
             }
         }
