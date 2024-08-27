@@ -12,6 +12,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         inDegree = new int[N+1];
@@ -19,6 +21,7 @@ public class Main {
         for (int i = 0; i < list.length; i++) {
             list[i] = new ArrayList<>();
         }
+        
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int from = Integer.parseInt(st.nextToken());
@@ -26,6 +29,7 @@ public class Main {
             list[from].add(to);
             inDegree[to]++;
         }
+        
         for (int i = 1; i < inDegree.length; i++) {
             if(inDegree[i] == 0) queue.offer(i);
         }
@@ -38,10 +42,11 @@ public class Main {
                 if(inDegree[i] == 0) queue.offer(i);
             }
         }
+        
         for (Integer i : result) {
-            System.out.print(i + " ");
+            sb.append(i).append(" ");
         }
-        System.out.println();
+        System.out.println(sb.toString());
         br.close();
     }
 }
