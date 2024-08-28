@@ -94,7 +94,6 @@ public class Solution {
                                 if((map[ny][nx] < cell.life && visited[ny][nx] == cnt)) {
                                     map[ny][nx] = cell.life;
                                     visited[ny][nx] = cnt;
-                                    queue.remove(new Cell(ny, nx, map[ny][nx], 0, map[ny][nx]));
                                     newQueue.offer(new Cell(ny, nx, cell.life, 0, cell.life));
                                 }
                             }
