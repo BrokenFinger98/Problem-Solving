@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+/**
+ *  시간 : 234ms, 메모리 : 89,272KB;
+ */
 public class Solution {
     static class Cell{
         int y, x, life, activation, deactivation;
@@ -90,12 +93,6 @@ public class Solution {
                                 map[ny][nx] = cell.life;
                                 visited[ny][nx] = cnt;
                                 newQueue.offer(new Cell(ny, nx, cell.life, 0, cell.life));
-                            }else {
-                                if((map[ny][nx] < cell.life && visited[ny][nx] == cnt)) {
-                                    map[ny][nx] = cell.life;
-                                    visited[ny][nx] = cnt;
-                                    newQueue.offer(new Cell(ny, nx, cell.life, 0, cell.life));
-                                }
                             }
                         }
                     }
