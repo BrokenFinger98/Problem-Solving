@@ -17,7 +17,7 @@ public class Main {
 
     static int N, M, from, to, weight;
     static List<Node>[] list;
-    static int[] result = new int[101];
+    static int[] result;
     static Queue<Node> queue = new ArrayDeque<>();
     static int[] inDegree;
     static int[] count;
@@ -31,6 +31,7 @@ public class Main {
         list = new List[N + 1];
         inDegree = new int[N + 1];
         count = new int[N + 1];
+        result = new int[N + 1];
         for (int i = 1; i < N + 1; i++) {
             list[i] = new ArrayList<>();
         }
