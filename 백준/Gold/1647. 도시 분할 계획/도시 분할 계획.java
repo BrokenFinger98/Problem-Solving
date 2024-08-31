@@ -43,7 +43,7 @@ public class Main {
             C = Integer.parseInt(st.nextToken());
             pq.offer(new Edge(A, B, C));
         }
-        int lastStreet = 0;
+
         int count = 0;
         while (!pq.isEmpty()) {
             if(count == N-2) break;
@@ -55,7 +55,6 @@ public class Main {
                 union(A, B);
                 answer += C;
                 ++count;
-                lastStreet = C;
             }
         }
         System.out.println(answer);
