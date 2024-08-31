@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- *  시간 : 444ms, 메모리 : 47,152KB
+ *  시간 : 1,240ms, 메모리 : 321,084KB
  */
 public class Main {
     static class Edge implements Comparable<Edge>{
@@ -44,7 +44,9 @@ public class Main {
             pq.offer(new Edge(A, B, C));
         }
         int lastStreet = 0;
+        int count = 0;
         while (!pq.isEmpty()) {
+            if(count == N-2) break;
             Edge edge = pq.poll();
             A = edge.A;
             B = edge.B;
@@ -52,10 +54,11 @@ public class Main {
             if(find(A) != find(B)){
                 union(A, B);
                 answer += C;
+                ++count;
                 lastStreet = C;
             }
         }
-        System.out.println(answer - lastStreet);
+        System.out.println(answer);
     }
     static void union(int A, int B){
         int pa = find(A);
