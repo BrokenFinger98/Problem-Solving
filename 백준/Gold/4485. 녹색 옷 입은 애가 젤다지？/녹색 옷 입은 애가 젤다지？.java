@@ -14,6 +14,7 @@ public class Main {
 	public static void main(String[] args) throws IOException{
 		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
+		final int INF = Integer.MAX_VALUE;
 		
 		int tc=1;
 		while((N=Integer.parseInt(br.readLine()))>0) {
@@ -29,7 +30,7 @@ public class Main {
 			int[][] costs = new int[N][N];
 			
 			for (int i = 0; i < N; i++) {
-				Arrays.fill(costs[i], Integer.MAX_VALUE);
+				Arrays.fill(costs[i], INF);
 			}
 			
 			PriorityQueue<int[]> q = new PriorityQueue<int[]>((a, b)->Integer.compare(a[2], b[2]));
@@ -38,8 +39,6 @@ public class Main {
 			
 			while(!q.isEmpty()) {
 				int[] cur = q.poll();
-//				if(visited[cur[0]][cur[1]]) continue;
-//				visited[cur[0]][cur[1]] = true;
 				int cost = costs[cur[0]][cur[1]];
 				if(cur[0] == N-1 && cur[1] == N-1) break;
 				for (int[] dir: dirs) {
