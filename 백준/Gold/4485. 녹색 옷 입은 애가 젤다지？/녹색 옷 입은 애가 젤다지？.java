@@ -38,15 +38,18 @@ public class Main {
 			
 			while(!q.isEmpty()) {
 				int[] cur = q.poll();
-				if(visited[cur[0]][cur[1]]) continue;
-				visited[cur[0]][cur[1]] = true;
+//				if(visited[cur[0]][cur[1]]) continue;
+//				visited[cur[0]][cur[1]] = true;
 				int cost = costs[cur[0]][cur[1]];
 				if(cur[0] == N-1 && cur[1] == N-1) break;
 				for (int[] dir: dirs) {
 					int ny = cur[0] + dir[0];
 					int nx = cur[1] + dir[1];
-					if(ny<0 || nx<0 || ny>=N || nx>=N) continue;
+					
+					if(ny<0 || nx<0 || ny>=N || nx>=N || visited[ny][nx]) continue;
 					if(costs[ny][nx] <= cost+map[ny][nx]) continue;
+					
+					visited[ny][nx] = true;
 					costs[ny][nx] = cost+map[ny][nx];
 					q.add(new int[] {ny, nx, costs[ny][nx]});
 				}
