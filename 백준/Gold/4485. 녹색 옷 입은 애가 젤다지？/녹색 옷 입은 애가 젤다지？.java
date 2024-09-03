@@ -41,6 +41,7 @@ public class Main {
 				if(visited[cur[0]][cur[1]]) continue;
 				visited[cur[0]][cur[1]] = true;
 				int cost = costs[cur[0]][cur[1]];
+				if(cur[0] == N-1 && cur[1] == N-1) break;
 				for (int[] dir: dirs) {
 					int ny = cur[0] + dir[0];
 					int nx = cur[1] + dir[1];
