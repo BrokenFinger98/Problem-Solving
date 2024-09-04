@@ -8,7 +8,8 @@ import java.util.StringTokenizer;
 public class Main {
     static int N, d, k, c;
     static int[] sushi;
-    static int answer;
+    static int[] counts;
+    static int answer, kinds;
     static Map<Integer, Integer> map = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
@@ -20,29 +21,23 @@ public class Main {
         k = Integer.parseInt(st.nextToken());
         c = Integer.parseInt(st.nextToken());
         sushi = new int[N];
+        counts = new int[d];
+        counts[c-1] = 1;
 
         for (int i = 0; i < N; i++) {
-            sushi[i] = Integer.parseInt(br.readLine());
+            sushi[i] = Integer.parseInt(br.readLine()) - 1;
         }
-
+        kinds = 1;
         for (int i = 0; i < k; i++) {
-            map.put(sushi[i], map.getOrDefault(sushi[i], 0) + 1);
+            if(++counts[sushi[i]] == 1) ++kinds;
         }
-        answer = map.containsKey(c) ? map.size() : map.size() + 1;
-
+        answer = kinds;
         for (int i = k; i < N+k; i++) {
-            if(map.containsKey(sushi[(i-k)%N])){
-                if(map.get(sushi[(i-k)%N]) == 1)
-                    map.remove(sushi[(i - k) % N]);
-                else map.put(sushi[(i - k) % N], map.get(sushi[(i - k) % N]) - 1);
-            }
-            if(map.containsKey(sushi[i%N])){
-                map.put(sushi[i % N], map.get(sushi[i % N]) + 1);
-            }else{
-                map.put(sushi[i % N], 1);
-            }
-            answer = Math.max(answer, map.containsKey(c) ? map.size() : map.size() + 1);
+            if(--counts[sushi[(i-k)%N]] == 0) kinds--;
+            if(++counts[sushi[i%N]] == 1) kinds++;
+            answer = Math.max(answer, kinds);
         }
+
         System.out.println(answer);
         br.close();
     }
