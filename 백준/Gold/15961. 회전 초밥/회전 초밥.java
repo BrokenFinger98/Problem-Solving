@@ -1,55 +1,49 @@
-/*
-
-2 ≤ N ≤ 3,000,000, 2 ≤ d ≤ 3,000, 2 ≤ k ≤ 3,000 (k ≤ N), 1 ≤ c ≤ d
-
-8 30 4 30
-7
-9
-7
-30
-2
-7
-9
-25
-
- */
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
+
 public class Main {
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	
-	public static void main(String[] args) throws IOException{
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int d = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
-		int c = Integer.parseInt(st.nextToken())-1;
-		
-		int[] sushi = new int[N+k-1]; // 뒤에 앞에걸 복사해서 붙임.
-		int[] counts = new int[3000];
-		counts[c] = 1;
-		int maxKind;
-		
-		for (int i = 0; i < N; i++)
-			sushi[i] = Integer.parseInt(br.readLine())-1;
-		
-		for (int i = 0; i < k-1; i++)
-			sushi[N+i] = sushi[i];
+    static int N, d, k, c;
+    static int[] sushi;
+    static int answer;
+    static Map<Integer, Integer> map = new HashMap<>();
 
-		int kind = 1;
-		for (int i = 0; i < k; i++)
-			if(++counts[sushi[i]]==1) kind++;
-		
-		maxKind = kind;
-		int start = 0, end = k-1;
-		for (int i = 0; i < N-1; i++) {
-			if(--counts[sushi[start++]]==0) kind--;
-			if(++counts[sushi[++end]]==1) kind++;
-			if(kind > maxKind) {
-				maxKind = kind;
-			}
-		}
-		System.out.println(maxKind);
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
+        N = Integer.parseInt(st.nextToken());
+        d = Integer.parseInt(st.nextToken());
+        k = Integer.parseInt(st.nextToken());
+        c = Integer.parseInt(st.nextToken());
+        sushi = new int[N];
+
+        for (int i = 0; i < N; i++) {
+            sushi[i] = Integer.parseInt(br.readLine());
+        }
+
+        for (int i = 0; i < k; i++) {
+            map.put(sushi[i], map.getOrDefault(sushi[i], 0) + 1);
+        }
+        answer = map.containsKey(c) ? map.size() : map.size() + 1;
+
+        for (int i = k; i < N+k; i++) {
+            if(map.containsKey(sushi[(i-k)%N])){
+                if(map.get(sushi[(i-k)%N]) == 1)
+                    map.remove(sushi[(i - k) % N]);
+                else map.put(sushi[(i - k) % N], map.get(sushi[(i - k) % N]) - 1);
+            }
+            if(map.containsKey(sushi[i%N])){
+                map.put(sushi[i % N], map.get(sushi[i % N]) + 1);
+            }else{
+                map.put(sushi[i % N], 1);
+            }
+            answer = Math.max(answer, map.containsKey(c) ? map.size() : map.size() + 1);
+        }
+        System.out.println(answer);
+        br.close();
+    }
 }
