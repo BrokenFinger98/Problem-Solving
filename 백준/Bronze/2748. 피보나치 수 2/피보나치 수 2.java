@@ -13,8 +13,8 @@ public class Main {
         br.close();
     }
     static long fibo(int index){
-        if(index == 0 || index == 1) return index;
-        if(dp[index] != 0) return dp[index];
-        return dp[index] = fibo(index-1) + fibo(index-2);
+    	if(index <= 1) return dp[index] = index;
+        if(dp[index] == 0) dp[index] = fibo(index-1) + fibo(index-2);
+        return dp[index];
     }
 }
