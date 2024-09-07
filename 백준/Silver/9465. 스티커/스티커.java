@@ -30,8 +30,8 @@ public class Main {
             dp[0][1] = input[0][1];
             dp[1][1] = input[1][1];
             for (int i = 2; i < N+1; i++) {
-                dp[0][i] = Math.max(Math.max(dp[0][i-2], dp[1][i-2]), dp[1][i-1]) + input[0][i];
-                dp[1][i] = Math.max(Math.max(dp[1][i-2], dp[0][i-2]), dp[0][i-1]) + input[1][i];
+                dp[0][i] = Math.max(dp[1][i-2], dp[1][i-1]) + input[0][i];
+                dp[1][i] = Math.max(dp[0][i-2], dp[0][i-1]) + input[1][i];
             }
             System.out.println(Math.max(dp[0][N], dp[1][N]));
         }
@@ -42,9 +42,9 @@ public class Main {
         }
         if(dp[index][num] == 0){
             if(index == 0){
-                dp[index][num] = Math.max(Math.max(recur(index, num-2), recur(index+1, num-2)), recur(index+1, num-1)) + input[index][num];
+                dp[index][num] = Math.max(recur(index+1, num-2), recur(index+1, num-1)) + input[index][num];
             }else{
-                dp[index][num] = Math.max(Math.max(recur(index, num-2), recur(index-1, num-2)), recur(index-1, num-1)) + input[index][num];
+                dp[index][num] = Math.max(recur(index-1, num-2), recur(index-1, num-1)) + input[index][num];
             }
         }
         return dp[index][num];
