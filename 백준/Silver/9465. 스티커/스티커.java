@@ -36,6 +36,7 @@ public class Main {
             System.out.println(Math.max(dp[0][N], dp[1][N]));
         }
     }
+    // top-down은 무조건 시간 초과 발생
     static int recur(int index, int num){
         if(num <= 1){
             return dp[index][num] = input[index][num];
