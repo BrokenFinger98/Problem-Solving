@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- *  시간 : 296ms, 메모리 : 43,696KB
+ *  시간 : 512ms, 메모리 : 67,680KB
  */
 public class Main {
     static class Node implements Comparable<Node> {
@@ -56,6 +56,7 @@ public class Main {
             pq.offer(new Node(i, 0));
             while (!pq.isEmpty()) {
                 Node now = pq.poll();
+                if(now.to == X && i != X) break;
                 if(dist[i][now.to] != now.weight) continue;
                 for (Node next : list[now.to]) {
                     if (dist[i][next.to] > dist[i][now.to] + next.weight) {
