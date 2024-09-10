@@ -62,6 +62,7 @@ public class Main {
         pq.offer(new Node(N, 0));
         while (!pq.isEmpty()){
             Node now = pq.poll();
+            if(now.to == K) break;
             if(dist[now.to] != now.weight) continue;
             for (Node next : list[now.to]) {
                 if(dist[next.to] > dist[now.to] + next.weight){
