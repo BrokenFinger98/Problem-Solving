@@ -1,9 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.StringTokenizer;
-
+import java.util.*;
+/**
+ *  시간 : 80ms, 메모리 : 11,928KB
+ */
 public class Main {
     static int n, k;
     static int[] coins;
@@ -20,18 +21,17 @@ public class Main {
         for (int i = 1; i <= n; i++) {
             coins[i] = Integer.parseInt(br.readLine());
         }
+        Arrays.fill(dp, Integer.MAX_VALUE - 1);
+        dp[0] = 0;
         for (int i = 1; i <= k; i++) {
-            int ret = Integer.MAX_VALUE;
             for (int j = 1; j <= n; j++) {
                 if (i >= coins[j]) {
-                    if(dp[i-coins[j]] == Integer.MAX_VALUE) continue;
-                    ret = Math.min(ret, dp[i-coins[j]]+1);
+                    dp[i] = Math.min(dp[i], dp[i-coins[j]]+1);
                 }
             }
-            dp[i] = ret;
         }
 
-        System.out.println(dp[k] == Integer.MAX_VALUE ? -1 : dp[k]);
+        System.out.println(dp[k] == Integer.MAX_VALUE-1 ? -1 : dp[k]);
     }
 }
 
