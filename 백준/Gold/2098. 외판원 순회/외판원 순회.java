@@ -5,39 +5,44 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int N, answer = 16*1_000_000;
-    static int[][] weights;
-    static int[][] dp;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        N = Integer.parseInt(br.readLine());
-        weights = new int[N][N];
-        dp = new int[N][1 << N];
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < N; j++) {
-                weights[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
-        for (int i = 0; i < N; i++) {
-            Arrays.fill(dp[i], 16*1_000_000);
-        }
 
-        System.out.println(go( 0, 1));
-        br.close();
-    }
-    static int go(int cur, int flag){
-        if(flag == Math.pow(2, N)-1){
-            return weights[cur][0] == 0 ? 1_000_000 : weights[cur][0];
-        }
-        if(dp[cur][flag] != 16*1_000_000) return dp[cur][flag];
-        for (int i = 0; i < N; i++) {
-            if((flag & 1 << i) != 0) continue;
-            if(weights[cur][i] == 0) continue;
-            dp[cur][flag] = Math.min(dp[cur][flag], go(i, flag | 1 << i) + weights[cur][i]);
-        }
-        return dp[cur][flag];
-    }
+	private static int n;
+	private static int[][] arr, dp;
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		n = Integer.parseInt(br.readLine());
+		arr = new int[n][n];
+		dp = new int[n][1<<n];
+		for (int i = 0; i < n; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < n; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+		
+		for (int i = 0; i < n; i++) {
+			Arrays.fill(dp[i], 16*1_000_000);
+		}
+		
+		System.out.println(backTracking(0, 1));	
+		
+	}
+	
+	public static int backTracking(int curNode, int bit) {
+		if (bit == (1<<n) - 1) {
+			if (arr[curNode][0] == 0) return 1_000_000;
+			return arr[curNode][0];
+		}
+		
+		if(dp[curNode][bit]!= 16_000_000) return dp[curNode][bit];
+		
+		for (int i = 1; i < n; i++) {
+			if (arr[curNode][i] == 0) continue;
+			if ((bit & (1 << i)) != 0) continue;
+			dp[curNode][bit] = Math.min(dp[curNode][bit], backTracking(i, bit | (1 << i)) + arr[curNode][i]);
+		}
+		return dp[curNode][bit];
+	}
+
 }
-
