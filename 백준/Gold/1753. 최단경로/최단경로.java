@@ -1,71 +1,76 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
-class Node{
-    int weight;
-    int u;
-
-    public Node(int weight, int u) {
-        this.weight = weight;
-        this.u = u;
-    }
-}
 public class Main {
-    static PriorityQueue<Node> priorityQueue = new PriorityQueue<>((o1, o2) -> {
-        return o1.weight - o2.weight;
-    });
-    static List<Node>[] graph;
-    static int[] dist;
-    static int V, E, K;
-    static int from, to, weight;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb;
+	
+	private static final int INF = (int)1e9;
+	private static int[] d;
+	private static ArrayList<ArrayList<int[]>> list = new ArrayList<ArrayList<int[]>>();
 
-        V = Integer.parseInt(st.nextToken());
-        E = Integer.parseInt(st.nextToken());
-        st = new StringTokenizer(br.readLine());
-        K = Integer.parseInt(st.nextToken());
-        graph = new List[V+1];
-        dist = new int[V+1];
-        Arrays.fill(dist, Integer.MAX_VALUE);
-        for (int i = 0; i < V+1; i++) {
-            graph[i] = new ArrayList<>();
-        }
-        for (int i = 0; i < E; i++) {
-            st = new StringTokenizer(br.readLine());
-            from = Integer.parseInt(st.nextToken());
-            to = Integer.parseInt(st.nextToken());
-            weight = Integer.parseInt(st.nextToken());
-            graph[from].add(new Node(weight, to));
-        }
-        dijkstra(K);
-        for (int i = 1; i <= V; i++) {
-            if(dist[i] == Integer.MAX_VALUE) System.out.println("INF");
-            else System.out.println(dist[i]);
-        }
-        br.close();
-    }
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int v = Integer.parseInt(st.nextToken());
+		int e = Integer.parseInt(st.nextToken());
+		
+		d = new int[v+1];
+		Arrays.fill(d, INF);
+		
+		for (int i = 0; i < v+1; i++) {
+			list.add(new ArrayList<>());
+		}
+		
+		int k = Integer.parseInt(br.readLine());
+		for (int i = 0; i < e; i++) {
+			st = new StringTokenizer(br.readLine());
+			
+			int from = Integer.parseInt(st.nextToken());
+			int to = Integer.parseInt(st.nextToken());
+			int dis = Integer.parseInt(st.nextToken());
+			
+			list.get(from).add(new int[] {to, dis});
+		}
+		
+		dijkstra(k);
+		
+		for (int i = 1; i < v+1; i++) {
+			if (d[i] == INF) {
+				System.out.println("INF");
+			}else {
+				System.out.println(d[i]);
+			}
+		}
+	}
 
-    static void dijkstra(int start) {
-        dist[start] = 0;
-        priorityQueue.offer(new Node(0, start));
-        while (!priorityQueue.isEmpty()) {
-            Node now = priorityQueue.poll();
-            int here = now.u;
-            int here_dist = now.weight;
-            if(dist[here] != here_dist) continue;
-            for (Node node : graph[here]) {
-                int to = node.u;
-                int weight = node.weight;
-                if (dist[to] > dist[here] + weight) {
-                    dist[to] = dist[here] + weight;
-                    priorityQueue.offer(new Node(dist[to], to));
-                }
-            }
-        }
-    }
+	private static void dijkstra(int start) {
+		PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> o1[1] - o2[1]);
+		
+		pq.add(new int[] {start, 0});
+		d[start] = 0;
+		
+		while (!pq.isEmpty()) {
+			int[] p = pq.poll();
+			
+			int now = p[0];
+			int dis = p[1];
+			
+			if (d[now] < dis) continue;
+			
+			for (int i = 0; i < list.get(now).size(); i++) {
+				int cost = dis + list.get(now).get(i)[1];
+				
+				if (cost < d[list.get(now).get(i)[0]]) {
+					d[list.get(now).get(i)[0]] = cost;
+					pq.add(new int[] {list.get(now).get(i)[0], cost});
+				}
+			}
+		}
+	}
+
 }
