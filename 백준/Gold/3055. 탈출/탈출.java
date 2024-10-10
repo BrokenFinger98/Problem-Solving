@@ -1,73 +1,110 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static class Pair{
-        int y, x;
-        boolean status;
+	
+	private static int r, c;
+	private static int[] dx = {-1, 0, 1, 0};
+	private static int[] dy = {0, 1, 0, -1};
+	private static int[][] dis;
+	private static char[][] map;
 
-        public Pair(int y, int x, boolean status) {
-            this.y = y;
-            this.x = x;
-            this.status = status;
-        }
-    }
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		r = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
+		map = new char[r][c];
+		dis = new int[r][c];
+		
+		int x = 0;
+		int y = 0;
+		
+		int sx = 0;
+		int sy = 0;
+		List<int[]> water = new ArrayList<>();
+		for (int i = 0; i < r; i++) {
+			String str = br.readLine();
+			for (int j = 0; j < c; j++) {
+				map[i][j] = str.charAt(j);
+				if (map[i][j] == 'S') {
+					x = i;
+					y = j;
+				} else if (map[i][j] == '*') {
+					water.add(new int[] {i, j});
+				} else if (map[i][j] == 'D') { 
+					sx = i;
+					sy = j;
+				}
+			}
+		}
+		
+		bfs(x, y, water, sx, sy);
+		if (dis[sx][sy] == 0) {
+			System.out.println("KAKTUS");
+		} else {
+			System.out.println(dis[sx][sy]);
+		}
+	}
+	
+	public static void bfs(int x, int y, List<int[]> water, int sx, int sy) {
+		Queue<int[]> q = new LinkedList<>();
+		boolean[][] visited = new boolean[r][c];
+		for (int[] p : water) {
+			q.add(new int[] {0, p[0], p[1]});
+			visited[p[0]][p[1]] = true;
+		}
+		q.add(new int[] {1, x, y});//1은 고돔
+		visited[x][y] = true;
+		
+		while (!q.isEmpty()) {
+//			for (int i = 0; i < r; i++) {
+//				for (int j = 0; j < c; j++) {
+//					System.out.print(map[i][j] + " ");
+//				}
+//				System.out.println();
+//			}
+//			System.out.println();
+//			for (int i = 0; i < r; i++) {
+//				for (int j = 0; j < c; j++) {
+//					System.out.print(dis[i][j] + " ");
+//				}
+//				System.out.println();
+//			}
+//			System.out.println();
+			int[] cur = q.poll();
+			
+			int type = cur[0];
+			int cx = cur[1];
+			int cy = cur[2];
+			
+			for (int i = 0; i < 4; i++) {
+				int nx = cx + dx[i];
+				int ny = cy + dy[i];
+				
+				if (nx < 0 || nx >= r || ny < 0 || ny >= c) continue;
+				if (visited[nx][ny])continue;
+				if (map[nx][ny] == 'X') continue;
+				if (type == 1 && map[nx][ny] == '*') continue;
+				if (type == 0 && map[nx][ny] == 'D') continue;
+				if (type == 0) {
+					visited[nx][ny] = true;
+					map[nx][ny] = '*';
+					q.add(new int[] {0, nx, ny});
+				} else {
+					visited[nx][ny] = true;
+					dis[nx][ny] = dis[cx][cy] + 1;
+					q.add(new int[] {1, nx, ny});
+				}
+			}
+		}
+	}
 
-	static int R, C, answer;
-    static int[] dy = {1, 0, -1, 0};
-    static int[] dx = {0, 1, 0, -1};
-    static char[][] map;
-    static Pair go;
-    static Queue<Pair> queue = new ArrayDeque<>();
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
-        map = new char[R][C];
-        for (int i = 0; i < R; i++) {
-            String s = br.readLine();
-            for (int j = 0; j < C; j++) {
-                map[i][j] = s.charAt(j);
-                if(map[i][j] == '*'){
-                    queue.offer(new Pair(i, j, false));
-                }else if(map[i][j] == 'S'){
-                    go = new Pair(i, j, true);
-                }
-            }
-        }
-
-        queue.offer(go);
-        while (!queue.isEmpty()){
-            int size = queue.size();
-            ++answer;
-            for (int i = 0; i < size; i++) {
-                Pair pair = queue.poll();
-                int y = pair.y;
-                int x = pair.x;
-                boolean status = pair.status;
-                for (int j = 0; j < 4; j++) {
-                    int ny = y + dy[j];
-                    int nx = x + dx[j];
-                    if(ny < 0 || ny >= R || nx < 0 || nx >= C) continue;
-                    if(!status && map[ny][nx] == '.'){
-                        map[ny][nx] = '*';
-                        queue.offer(new Pair(ny, nx, false));
-                    }else if(status && map[ny][nx] == '.') {
-                        map[ny][nx] = 'S';
-                        queue.offer(new Pair(ny, nx, true));
-                    }else if(status && map[ny][nx] == 'D') {
-                        System.out.println(answer);
-                        System.exit(0);
-                    }
-                }
-            }
-        }
-
-        System.out.println("KAKTUS");
-        br.close();
-    }
 }
