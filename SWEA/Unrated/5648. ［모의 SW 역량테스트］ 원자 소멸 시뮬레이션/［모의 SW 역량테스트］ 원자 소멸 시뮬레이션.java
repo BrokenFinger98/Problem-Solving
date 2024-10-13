@@ -44,7 +44,7 @@ public class Solution {
             int N = Integer.parseInt(br.readLine());
             List<Atom> atoms = new ArrayList<>();
             PriorityQueue<Collision> pq = new PriorityQueue<>();
-         
+
             for (int i = 0; i < N; i++) {
                 st = new StringTokenizer(br.readLine());
                 int x = Integer.parseInt(st.nextToken());
