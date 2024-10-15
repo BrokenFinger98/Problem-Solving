@@ -5,43 +5,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    static List<Integer> result = new ArrayList<>();
-    static int[] fail;
-    static char[] text;
-    static char[] pattern;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
         String s = br.readLine();
         String s1 = br.readLine();
-        s = "#" + s;
-        s1 = "#" + s1;
-        text = s.toCharArray();
-        pattern = s1.toCharArray();
-        fail = new int[pattern.length];
-        fail[0] = -1;
-        for (int i = 1; i < pattern.length; i++) {
-            int j = fail[i-1];
-            while (j >= 0 && pattern[j+1] != pattern[i])
-                j = fail[j];
-            fail[i] = j + 1;
-        }
+        char[] text = s.toCharArray();
+        char[] pattern = s1.toCharArray();
+        int[] fail = makeTable(pattern);
+        System.out.println(kmp(fail, text, pattern));
+    }
+
+    private static String kmp(int[] fail, char[] text, char[] pattern) {
+        StringBuilder sb = new StringBuilder();
+        List<Integer> result = new ArrayList<>();
         int j = 0;
-        for (int i = 1; i < text.length; i++) {
-            while (j >= 0 && text[i] != pattern[j+1])
-                j = fail[j];
-            j++;
-            if(j == pattern.length-1){
-                result.add(i-j+1);
-                j = fail[j];
+        for (int i = 0; i < text.length; i++) {
+            while (j > 0 && text[i] != pattern[j])
+                j = fail[j-1];
+            if(text[i] == pattern[j]){
+                if(j == pattern.length-1){
+                    result.add(i-j+1);
+                    j = fail[j];
+                }else{
+                    ++j;
+                }
             }
         }
         sb.append(result.size()).append("\n");
         for (Integer i : result) {
             sb.append(i).append(" ");
         }
-        System.out.println(sb);
+        return sb.toString();
+    }
+
+    private static int[] makeTable(char[] pattern) {
+        int[] fail = new int[pattern.length];
+        int j = 0;
+        for (int i = 1; i < pattern.length; i++) {
+            while (j > 0 && pattern[j] != pattern[i])
+                j = fail[j-1];
+            if(pattern[j] == pattern[i]) fail[i] = ++j;
+        }
+        return fail;
     }
 }
 
