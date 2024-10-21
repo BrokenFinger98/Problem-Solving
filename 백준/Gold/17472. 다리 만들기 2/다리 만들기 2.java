@@ -1,145 +1,197 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static class Edge implements Comparable<Edge>{
-        int from, to, weight;
+	
+	private static class Island implements Comparable<Island> {
+		int from;
+		int to;
+		int dis;
 
-        public Edge(int from, int to, int weight) {
-            this.from = from;
-            this.to = to;
-            this.weight = weight;
-        }
+		public Island(int from, int to, int dis) {
+			this.from = from;
+			this.to = to;
+			this.dis = dis;
+		}
+		
+		@Override
+		public String toString() {
+			return "Island [from=" + from + ", to=" + to + ", dis=" + dis + "]";
+		}
 
-        @Override
-        public int compareTo(Edge o) {
-            return this.weight - o.weight;
-        }
-    }
-    static class Node {
-        int y, x;
+		public int compareTo(Island o) {
+			return this.dis - o.dis;
+		}
+	}
+	
+	private static int n, m, answer, count, mapIndex = 2;
+	private static int[] parents;
+	private static int[] dx = {-1, 0, 1, 0};
+	private static int[] dy = {0, 1, 0, -1};
+	private static int[][] arr;
+	private static boolean[][] visited;
+	private static PriorityQueue<Island> pq;
 
-        public Node(int y, int x) {
-            this.y = y;
-            this.x = x;
-        }
-    }
-    static int N, M, answer;
-    static boolean[][] map;
-    static int[][] visited;
-    static int[] dy = {1, 0, -1, 0};
-    static int[] dx = {0, 1, 0, -1};
-    static int[] parent;
-    static List<List<Node>> islands = new ArrayList<>();
-    static PriorityQueue<Edge> pq = new PriorityQueue<>();
+	public static void main(String[] args) throws IOException{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		init(br);
+		makeMapIndex();
+		calculateIslandDistance();
+		findMinBridgeDistance();
+		
+		if (answer == 0 || (mapIndex-3) != count) {
+			System.out.println(-1);
+		} else {
+			System.out.println(answer);
+		}
+	}
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+	private static void init(BufferedReader br) throws IOException {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		arr = new int[n][m];
+		
+		for (int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < m; j++) {
+				arr[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+		
+		parents = new int[8];
+		for (int i = 0; i < 8; i++) {
+			parents[i] = i;
+		}
+	}
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        map = new boolean[N][M];
-        visited = new int[N][M];
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < M; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken()) == 1;
-            }
-        }
+	private static void makeMapIndex() {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (flag(i, j)) mapIndex++;
+			}
+		}
+	}
+	
+	public static boolean flag(int x, int y) { 
+		if (x < 0 || x >= n || y < 0 || y >= m) return false;
+		
+		if (arr[x][y] == 1) {
+			arr[x][y] = mapIndex;
+			
+			flag(x+1, y);
+			flag(x-1, y);
+			flag(x, y+1);
+			flag(x, y-1);
+			return true;
+		}
+		return false;
+	}
+	
+	private static void calculateIslandDistance() {
+		visited = new boolean[n][m];
+		pq = new PriorityQueue<>();
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (arr[i][j] != 0) {//섬에서 섬 사이의 거리 구하기
+					findSameIsland(i, j, arr[i][j]);
+				}
+			}
+		}
+	}
+	
+	private static void findSameIsland(int x, int y, int mapNum) {
+		if (visited[x][y]) return;
+		//해당 좌표에서 bfs
+		//각 좌표에서 상하좌우로 퍼지면서 섬들 사이의 거리 구하기
+		Queue<int[]> q = new LinkedList<>();
+		q.offer(new int[] {x, y});
+		visited[x][y] = true;
+		
+		while (!q.isEmpty()) {
+			int[] p = q.poll();
+			
+			saveDistance(p, mapNum);
+			int cx = p[0];
+			int cy = p[1];
+			
+			for (int i = 0; i < 4; i++) {
+				int nx = cx + dx[i];
+				int ny = cy + dy[i];
+				
+				if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+				if (visited[nx][ny] || arr[nx][ny] != mapNum) continue;
+				//같은 숫자일 때
+				q.offer(new int[] {nx, ny});
+				visited[nx][ny] = true;
+			}
+		}
+	}
 
-        // 섬 만들기
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if(map[i][j] && visited[i][j] == 0){
-                    bfs(i, j);
-                }
-            }
-        }
+	private static void saveDistance(int[] p, int mapNum) {
+		for (int i = 0; i < 4; i++) {
+			int cx = p[0];
+			int cy = p[1];
+			
+			int count = 0;
+			while (true) {
+				count++;
+				int nx = cx + dx[i]*count;
+				int ny = cy + dy[i]*count;
+				if (nx < 0 || nx >= n || ny < 0 || ny >= m || arr[nx][ny] == mapNum) break;
+				if (arr[nx][ny] != mapNum && arr[nx][ny] != 0) {
+					//다른 섬과 만나고 길이가 2이상 이라면
+					//count-1값을 저장해주면 됨
+					//다른 섬과 만나면 바로 빠져나가기
+					pq.offer(new Island(mapNum, arr[nx][ny], count-1));
+					break;
+				}
+			}
+		}
+	}
 
-        // 간선 구하기
-        for (int i = 0; i < islands.size(); i++) {
-            for (int j = 0; j < islands.get(i).size(); j++) {
-                Node now = islands.get(i).get(j);
-                int y = now.y;
-                int x = now.x;
-                for (int k = 0; k < 4; k++) {
-                    int ny = y + dy[k];
-                    int nx = x + dx[k];
-                    if(ny < 0 || ny >= N || nx < 0 || nx >= M) continue;
-                    if(visited[ny][nx] == 0){
-                        int dist = 1;
-                        boolean flag = false;
-                        while (true){
-                            ny += dy[k];
-                            nx += dx[k];
-                            if(ny < 0 || ny >= N || nx < 0 || nx >= M) break;
-                            if(visited[ny][nx] != 0){
-                                flag = true;
-                                break;
-                            }
-                            ++dist;
-                        }
-                        if(dist >= 2 && flag)
-                            pq.offer(new Edge(visited[y][x]-1, visited[ny][nx]-1, dist));
-                    }
-                }
-            }
-        }
-
-        // kruskal
-        parent = new int[islands.size()];
-        for (int i = 0; i < islands.size(); i++) {
-            parent[i] = i;
-        }
-        int connectedEdge = 0;
-        while (!pq.isEmpty()){
-            Edge edge = pq.poll();
-            int from = edge.from;
-            int to = edge.to;
-            int weight = edge.weight;
-            if(find(from) != find(to)){
-                union(from, to);
-                answer += weight;
-                connectedEdge++;
-            }
-        }
-        if(connectedEdge+1 != islands.size()) answer = 0;
-        System.out.println(answer == 0 ? -1 : answer);
-    }
-    static void bfs(int startY, int startX){
-        islands.add(new ArrayList<>());
-        visited[startY][startX] = islands.size();
-        Queue<Node> queue = new ArrayDeque<>();
-        queue.offer(new Node(startY, startX));
-        while (!queue.isEmpty()){
-            Node now = queue.poll();
-            islands.get(islands.size()-1).add(now);
-            int y = now.y;
-            int x = now.x;
-            for (int i = 0; i < 4; i++) {
-                int ny = y + dy[i];
-                int nx = x + dx[i];
-                if(ny < 0 || ny >= N || nx < 0 || nx >= M) continue;
-                if(visited[ny][nx] == 0 && map[ny][nx]){
-                    visited[ny][nx] = islands.size();
-                    queue.offer(new Node(ny, nx));
-                }
-            }
-        }
-    }
-    static void union(int u, int v){
-        int pu = find(u);
-        int pv = find(v);
-        if(pu < pv) parent[pv] = pu;
-        else parent[pu] = pv;
-    }
-
-    static int find(int v){
-        if(parent[v] == v) return v;
-        return parent[v] = find(parent[v]);
-    }
+	private static void findMinBridgeDistance() {
+		answer = 0;
+		count = 0;
+		while (!pq.isEmpty()) {
+			Island island = pq.poll();
+			int dis = island.dis;
+			if (dis == 1) continue;
+			
+			int from = island.from;
+			int to = island.to;
+			
+			if (findParent(from) != findParent(to)) {
+				unionParent(from, to);
+				answer += dis;
+				count++;
+			}
+		}
+	}
+	
+	private static int findParent(int a) {
+		if (parents[a] == a) return a;
+		else return parents[a] = findParent(parents[a]);
+	}
+	
+	private static void unionParent(int a, int b) {
+		a = findParent(a);
+		b = findParent(b);
+		
+		if (a < b) parents[b] = a;
+		else parents[a] = b;
+	}
+	
+	private static boolean isSameParents() {
+		for (int i = 2; i < mapIndex-1; i++) {
+			if (parents[i] != parents[i+1]) return false;
+		}
+		return true;
+	}
 }
-
