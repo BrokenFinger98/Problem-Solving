@@ -1,62 +1,45 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
-    static int N;
-
-    // 해당 인덱스가 소수이면 false, 아니면 true를 저장하는 배열
-    // boolean의 default값은 false이기 때문에
-    static boolean[] checkPrime;
-
-    // 소수를 저장하는 배열
-    static List<Integer> prime = new ArrayList<>();
-    static int L, R;
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
+        if (N < 2) {
+            System.out.println(0);
+            return;
+        }
 
-        // N까지 소수 일 수 있으므로 N+1 사이즈로 배열 생성
-        checkPrime = new boolean[N+1];
+        boolean[] check = new boolean[N + 1];
+        check[0] = check[1] = true;
 
-        // 0, 1은 소수가 아님
-        checkPrime[0] = true;
-        checkPrime[1] = true;
-
-        for(int i = 2; i * i <= N; ++i){
-            if(!checkPrime[i]){
-                for(int j = i + i; j <= N; j += i)
-                    checkPrime[j] = true;
+        // 에라토스테네스의 체
+        for (int i = 2; i * i <= N; ++i) {
+            if (!check[i]) {
+                for (int j = i * i; j <= N; j += i) { // 미세 최적화: i*i부터 시작
+                    check[j] = true;
+                }
             }
         }
 
-        for(int i = 2; i <= N; ++i){
-            if(!checkPrime[i])
-                prime.add(i);
+        List<Integer> primes = new ArrayList<>();
+        for (int i = 2; i <= N; ++i) if (!check[i]) primes.add(i);
+
+        long sum = 0;
+        int answer = 0;
+        int left = 0, right = 0;
+
+        while (true) {
+            if (sum >= N) {
+                sum -= primes.get(left++);
+            } else {
+                if (right == primes.size()) break; // 더 늘릴 수 없으면 종료
+                sum += primes.get(right++);
+            }
+            if (sum == N) answer++;
         }
 
-        int sum = 0;
-        int result = 0;
-        int L = 0, R = 0;
-        while (true){
-            if(sum >= N){
-                sum -= prime.get(L);
-                ++L;
-            }else if(R == prime.size()){
-                break;
-            }else{
-                sum += prime.get(R);
-                ++R;
-            }
-            if(sum == N){
-                result++;
-            }
-        }
-
-        sb.append(result);
-        System.out.println(sb.toString());
-        br.close();
+        System.out.println(answer);
     }
 }
