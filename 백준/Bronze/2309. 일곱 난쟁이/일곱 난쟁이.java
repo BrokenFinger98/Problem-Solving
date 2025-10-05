@@ -1,34 +1,40 @@
-import javax.swing.plaf.IconUIResource;
-import java.util.*;
 import java.io.*;
-import java.lang.*;
+import java.util.*;
 
 public class Main {
-    static List<Integer> list = new ArrayList<>();
-    static int sum = 0;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        for (int i = 0; i < 9; ++i) {
-            list.add(Integer.parseInt(br.readLine()));
-            sum += list.get(i);
-        }
-        Collections.sort(list);
+		int[] minions = new int[9];
+		int sum = 0;
+		for(int i = 0; i < 9; ++i){
+			minions[i] = Integer.parseInt(br.readLine());
+			sum += minions[i];
+		}
+		Arrays.sort(minions);
+		int[] notMinionIndexes = findNotMinions(minions, sum);
+		for(int i = 0; i < 9; ++i){
+			if(notMinionIndexes[0] == i || notMinionIndexes[1] == i){
+				continue;
+			}
+			sb.append(minions[i] + "\n");
+		}
+		System.out.println(sb);
+		br.close();
+	}
 
-        sum -= 100;
-        int a = 0 , b = 0;
-        for(int i = 0; i < list.size(); ++i){
-            for(int j = i+1; j < list.size(); ++j){
-                if(sum == list.get(i) + list.get(j)){
-                    a = i; b = j;
-                    break;
-                }
-            }
-        }
-
-        for(int i = 0; i < list.size(); ++i){
-            if(i == a || i == b) continue;
-            System.out.println(list.get(i));
-        }
-    }
+	private static int[] findNotMinions(int[] minions, int sum) {
+		int[] result = new int[2];
+		for(int i = 0; i < 9; ++i){
+			for(int j = i + 1; j < 9; ++j){
+				if(sum - (minions[i] + minions[j]) == 100){
+					result[0] = i;
+					result[1] = j;
+					return result;
+				}
+			}
+		}
+		return result;
+	}
 }
