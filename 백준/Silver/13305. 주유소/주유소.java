@@ -2,7 +2,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -13,9 +12,9 @@ public class Main {
 
         st = new StringTokenizer(br.readLine());
 
-        int[] bridges = new int[N];
+        long[] bridges = new long[N];
         for (int i = 1; i < N; i++) {
-            bridges[i] = Integer.parseInt(st.nextToken());
+            bridges[i] = Long.parseLong(st.nextToken());
         }
 
         st = new StringTokenizer(br.readLine());
